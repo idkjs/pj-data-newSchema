@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+	<title>JSON Flattener</title>
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<style type="text/css">
+
+	body {
+
+    padding:20px;
+
+	}
+	</style>
+	<script type="text/javascript">JSON.flatten = function (data) {
+	    var result = {};
+
+	    function recurse(cur, prop) {
+	        if (Object(cur) !== cur) {
+	            result[prop] = cur;
+	        } else if (Array.isArray(cur)) {
+	            for (var i = 0, l = cur.length; i < l; i++)
+	            recurse(cur[i], prop + "[" + i + "]");
+	            if (l == 0) result[prop] = [];
+	        } else {
+	            var isEmpty = true;
+	            for (var p in cur) {
+	                isEmpty = false;
+	                recurse(cur[p], prop ? prop + "." + p : p);
+	            }
+	            if (isEmpty && prop) result[prop] = {};
+	        }
+	    }
+	    recurse(data, "");
+	    return result;
+	};
+	JSON.unflatten = function (data) {
+	    "use strict";
+	    if (Object(data) !== data || Array.isArray(data)) return data;
+	    var regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
+	        resultholder = {};
+	    for (var p in data) {
+	        var cur = resultholder,
+	            prop = "",
+	            m;
+	        while (m = regex.exec(p)) {
+	            cur = cur[prop] || (cur[prop] = (m[2] ? [] : {}));
+	            prop = m[2] || m[1];
+	        }
+	        cur[prop] = data[p];
+	    }
+	    return resultholder[""] || resultholder;
+	};
+
+
+	$("#process").click(function () {
+	    var flatten = $("#flatten").is(":checked");
+
+	    var result = flatten ? JSON.stringify(JSON.flatten(JSON.parse($("#input").val())), null, "\t") : JSON.stringify(JSON.unflatten(JSON.parse($("#input").val())), null, "\t")
+
+	    $("#output").val(result);
+	    $("#formatted").text(result);
+	});
+</script>
+</head>
+<body>
+
+
+<h1>JSON Flattener</h1>
+
+<div class="form-group">
+    <label>Mode:</label>
+    <label class="radio-inline">
+        <input id="flatten" name="mode" type="radio" value="flatten" checked="">Flatten</label>
+    <label class="radio-inline">
+        <input name="mode" type="radio" value="unflatten">Unflatten</label>
+</div>
+<div class="form-group">
+    <label>Input:</label>
+    <input class="form-control" type="text" name="" id="input">
+</div>
+<div class="form-group">
+    <label>Output:</label>
+    <textarea class="form-control" name="" id="output" cols="30" rows="5"></textarea>
+</div>
+<button id="process" class="btn btn-primary">Process</button>
+<br/>
+<br/>
+<label>Formatted:</label>
+<pre><code id="formatted"></code></pre>
+</body>
+</html>

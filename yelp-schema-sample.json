@@ -1,0 +1,26 @@
+
+{
+	"_id" : ObjectId("57b869bf88d5378eb90a890f"),
+	"business_id" : "3eu6MEFlq2Dg7bQh8QbdOg",
+	"full_address" : "1 Ravine St\nDravosburg, PA 15034",
+	"hours" : {
+		
+	},
+	"open" : true,
+	"categories" : [
+		"Auto Repair",
+		"Automotive"
+	],
+	"city" : "Dravosburg",
+	"review_count" : 3,
+	"name" : "Joe Cislo's Auto",
+	"neighborhoods" : [ ],
+	"longitude" : -79.889059,
+	"state" : "PA",
+	"stars" : 5,
+	"latitude" : 40.3509559,
+	"attributes" : {
+		
+	},
+	"type" : "business"
+}
