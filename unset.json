@@ -1,3 +1,4 @@
+//sample mongdodb unset arg.
 db.place.update({
     $unset: {
         attributes.AcceptsCreditCards: "",
